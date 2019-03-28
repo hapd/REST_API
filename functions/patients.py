@@ -10,7 +10,7 @@ def process_add_new_patient(req, client):
     newPatient = {
         "_id": (currentId+1),
         "name": req.get('name'),
-        "pin": req.get('pin'),
+        "password": req.get('password'),
         "nurse": req.get('nurse'),
         "age": age,
         "dob": req.get('dob'),
@@ -57,6 +57,22 @@ def process_get_patient(patient_id, req, client):
             "contact": patient.get("contact"),
             "address": patient.get("address")
         }
+    except:
+        res["fullfilmentText"] = "False"
+    res["source"] = "webhook-hapd-api"
+    res = json.dumps(res, indent = 4)
+    print("Response:", res)
+    return res
+
+def process_authenticate_patient(req, client):
+    res = {}
+    try:
+        patient_id = req.get('patient_id')
+        password = req.get('password')
+        if(password == client.data.patients.find_one({'_id': patient_id})["password"]):
+            res["fullfilmentText"] = "True"
+        else:
+            res["fullfilmentText"] = "False"
     except:
         res["fullfilmentText"] = "False"
     res["source"] = "webhook-hapd-api"
