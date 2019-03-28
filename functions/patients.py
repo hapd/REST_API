@@ -66,13 +66,14 @@ def process_get_patient(patient_id, req, client):
 
 def process_authenticate_patient(req, client):
     res = {}
+    print('Request:', req)
     try:
         patient_id = req.get('patient_id')
         password = req.get('password')
         if(password == client.data.patients.find_one({'_id': patient_id})["password"]):
-            res["fullfilmentText"] = "True"
+            res["fullfilmentText"] = "Access granted"
         else:
-            res["fullfilmentText"] = "False"
+            res["fullfilmentText"] = "Access denied"
     except:
         res["fullfilmentText"] = "False"
     res["source"] = "webhook-hapd-api"
