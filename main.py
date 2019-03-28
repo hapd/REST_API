@@ -38,7 +38,11 @@ def get_patient(patient_id):
 
 @app.route('/patients/authenticate', methods=['POST'])
 def authenticate_patient():
-    process_authenticate_patient(request.get_json(silent=True, force=True), client)
+    res = process_authenticate_patient(request.get_json(silent=True, force=True), client)
+    r = make_response(res)
+    r.headers["Content-Type"] = "application/json"
+    return r
+
     
 
 
