@@ -13,7 +13,8 @@ import os
 import pymongo
 
 # Local Imports
-import functions
+from functions.patients import process_add_new_patient
+from functions.patients import process_get_patient
 
 client = pymongo.MongoClient("mongodb+srv://hapd:majorproject19@cluster0-vm7gp.mongodb.net/test?retryWrites=true")
 
@@ -21,14 +22,14 @@ app = Flask(__name__)
 
 @app.route('/patients', methods=['POST'])
 def add_new_patient():
-    res = functions.patients.process_add_new_patient(request.get_json(silent=True, force=True), client)
+    res = process_add_new_patient(request.get_json(silent=True, force=True), client)
     r = make_response(res)
     r.headers["Content-Type"] = "application/json"
     return r
 
 @app.route('/patients/<int:patient_id>', methods=['GET'])
 def get_patient(patient_id):
-    res = functions.patients.process_get_patient(patient_id, request.get_json(silent=True, force=True), client)
+    res = process_get_patient(patient_id, request.get_json(silent=True, force=True), client)
     r = make_response(res)
     r.headers["Content-Type"] = "application/json"
     return r
