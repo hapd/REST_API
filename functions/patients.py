@@ -18,7 +18,8 @@ def process_add_new_patient(req, client):
         "gender": req.get('gender'),
         "contact": req.get('contact'),
         "bloodgroup": req.get('bloodgroup'),
-        "nurse_id": req.get('nurseId')
+        "nurse_id": req.get('nurseId'),
+        "address": req.get('address')
     }
     image_data = {
         "_id": (currentId+1),
@@ -40,19 +41,21 @@ def process_add_new_patient(req, client):
 def process_get_patient(patient_id, req, client):
     res = {}
     try:
-        patient = client.data.patients.find_one({'_id': patient_id})
+        patient = client.data.patients.find_one({'_id': int(patient_id)})
+        print(patient["name"])
         res["fullfilmentText"] = "True"
         res["data"] = {
-            "patient_id": patient["_id"],
-            "name": patient["name"],
-            "nurse": patient["nurse"],
-            "age": patient["age"],
-            "dob": patient["dob"],
-            "stage": patient["stage"],
-            "gender": patient["gender"],
-            "contact": patient["contact"],
-            "bloodgroup": patient["bloodgroup"],
-            "nurse_id": patient["nurse_id"] 
+            "pid": str(patient_id),
+            "name": patient.get("name"),
+            "age": patient.get("age"),
+            "dob": patient.get("dob"),
+            "stage": patient.get("stage"),
+            "gender": patient.get("gender"),
+            "bloodgroup": patient.get("bloodgroup"),
+            "nurse": patient.get("nurse"),
+            "nurse_id": patient.get("nurse_id"),
+            "contact": patient.get("contact"),
+            "address": patient.get("address")
         }
     except:
         res["fullfilmentText"] = "False"

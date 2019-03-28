@@ -29,6 +29,7 @@ def add_new_patient():
 
 @app.route('/patients/<int:patient_id>', methods=['GET'])
 def get_patient(patient_id):
+    print(patient_id)
     res = process_get_patient(patient_id, request.get_json(silent=True, force=True), client)
     r = make_response(res)
     r.headers["Content-Type"] = "application/json"
