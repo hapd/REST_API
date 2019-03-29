@@ -2,23 +2,27 @@
 import datetime
 import json
 
+def return_without_password(a):
+    del a["password"]
+    return a
+
 def process_add_new_patient(req, client):
     res = {}
     year = str(req.get('dob')).split("/")[2]
     age = datetime.datetime.now().year - int(year)
     currentId = client.data.patients.count_documents({})
     newPatient = {
-        "_id": (currentId+1),
+        "_id": int(currentId+1),
         "name": req.get('name'),
         "password": req.get('password'),
         "nurse": req.get('nurse'),
-        "age": age,
+        "age": int(age),
         "dob": req.get('dob'),
         "stage": req.get('stage'),
         "gender": req.get('gender'),
         "contact": req.get('contact'),
         "bloodgroup": req.get('bloodgroup'),
-        "nurse_id": req.get('nurseId'),
+        "nurse_id": int(req.get('nurseId')),
         "address": req.get('address')
     }
     image_data = {
@@ -43,19 +47,7 @@ def process_get_patient(patient_id, req, client):
     try:
         patient = client.data.patients.find_one({'_id': int(patient_id)})
         res["fullfilmentText"] = "True"
-        res["data"] = {
-            "pid": str(patient_id),
-            "name": patient.get("name"),
-            "age": patient.get("age"),
-            "dob": patient.get("dob"),
-            "stage": patient.get("stage"),
-            "gender": patient.get("gender"),
-            "bloodgroup": patient.get("bloodgroup"),
-            "nurse": patient.get("nurse"),
-            "nurse_id": patient.get("nurse_id"),
-            "contact": patient.get("contact"),
-            "address": patient.get("address")
-        }
+        res["data"] = return_without_password(patient)
     except:
         res["fullfilmentText"] = "False"
     res["source"] = "webhook-hapd-api"
@@ -67,7 +59,7 @@ def process_get_patient_groupby_nurse_id(nurse_id, req, client):
     res = {}
     try:
         patients_iter = client.data.patients.find({"nurse_id": nurse_id})
-        patients = [patient for patient in patients_iter]
+        patients = [return_without_password(patient) for patient in patients_iter]
         res["fullfilmentText"] = "True"
         res["data"] = patients
     except:
