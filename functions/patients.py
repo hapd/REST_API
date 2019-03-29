@@ -42,7 +42,6 @@ def process_get_patient(patient_id, req, client):
     res = {}
     try:
         patient = client.data.patients.find_one({'_id': int(patient_id)})
-        print(patient["name"])
         res["fullfilmentText"] = "True"
         res["data"] = {
             "pid": str(patient_id),
@@ -62,6 +61,23 @@ def process_get_patient(patient_id, req, client):
     res["source"] = "webhook-hapd-api"
     res = json.dumps(res, indent = 4)
     print("Response:", res)
+    return res
+
+def process_update_patient(patient_id, req, client):
+    res = {}
+    try:
+        query = {'_id': patient_id}
+        modified_data = req.get('data')
+        updatedResult = client.data.patients.update_one(query, {'$set': modified_data})
+        if(updatedResult.raw_result["updatedExisting"] == True):
+            res["fullfilmentText"] = "True"
+        else:
+            res["fullfilmentText"] = "False"
+    except:
+        print("Error in updating the document in the Database.")
+        res["fullfilmentText"] = "False"
+    res["source"] = "webhook-hapd-api"
+    res = json.dumps(res, indent=4)
     return res
 
 def process_authenticate_patient(req, client):
