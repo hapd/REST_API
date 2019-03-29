@@ -63,6 +63,19 @@ def process_get_patient(patient_id, req, client):
     print("Response:", res)
     return res
 
+def process_get_patient_groupby_nurse_id(nurse_id, req, client):
+    res = {}
+    try:
+        patients_iter = client.data.patients.find({"nurse_id": nurse_id})
+        patients = [patient for patient in patients_iter]
+        res["fullfilmentText"] = "True"
+        res["data"] = patients
+    except:
+        res["fullfilmentText"] = "False"
+    res["source"] = "webhook-hapd-api"
+    res = json.dumps(res, indent = 4)
+    return res
+
 def process_update_patient(patient_id, req, client):
     print("Request:", req)
     res = {}
