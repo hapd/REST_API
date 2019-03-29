@@ -64,6 +64,7 @@ def process_get_patient(patient_id, req, client):
     return res
 
 def process_update_patient(patient_id, req, client):
+    print("Request:", req)
     res = {}
     try:
         query = {'_id': patient_id}
