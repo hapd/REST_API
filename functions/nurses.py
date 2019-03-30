@@ -48,3 +48,40 @@ def process_get_nurse(nurse_id, req, client):
     res["source"] = "hapd-api"
     res = json.dumps(res, indent = 4)
     return res
+
+def process_update_nurse(nurse_id, req, client):
+    res = {}
+    data = req
+    query = {'_id': nurse_id}
+    try:
+        if('image' in req):
+            updatedResult1 = client.images.nurses.update_one(query, {"$set": data['image']})
+            if(updatedResult1.raw_result["updatedExisting"] == True):
+                res["fullfilmentText"] = "True"
+                del data["image"]
+            else:
+                res["fullfilmentText"] = "False"
+                res["source"] = "webhook-hapd-api"
+                res = json.dumps(res, indent=4)
+                return res
+        updatedResult2 = client.data.nurses.update_one(query, {'$set': data})
+        if(updatedResult2.raw_result["updatedExisting"] == True):
+            res["fullfilmentText"] = "True"
+        else:
+            res["fullfilmentText"] = "False"
+    except:
+        print("Error in updating the document in the Database.")
+        res["fullfilmentText"] = "False"
+    res["source"] = "hapd-api"
+    return json.dumps(res, indent=4)
+
+def process_authenticate_nurse(req, client):
+    res = {}
+    nurse_id = req.get("nurse_id")
+    password = req.get("password")
+    if(client.data.nurses.find_one({"_id": nurse_id})["password"] == password):
+        res["fullfilmentText"] = "True"
+    else:
+        res["fullfilmentText"] = "False"
+    res["source"] = "hapd-api"
+    return json.dumps(res, indent=4)

@@ -21,12 +21,14 @@ from functions.patients import process_get_patient_groupby_nurse_id
 from functions.patients import process_delete_patient
 from functions.nurses import process_add_new_nurse
 from functions.nurses import process_get_nurse
-
+from functions.nurses import process_update_nurse
+from functions.nurses import process_authenticate_nurse
 
 client = pymongo.MongoClient("mongodb+srv://hapd:majorproject19@cluster0-vm7gp.mongodb.net/test?retryWrites=true")
 
 app = Flask(__name__)
 
+# Routes for Patients
 @app.route('/patients', methods=['POST'])
 def add_new_patient():
     res = process_add_new_patient(request.get_json(silent=True, force=True), client)
@@ -84,6 +86,20 @@ def add_new_nurse():
 def get_nurse(nurse_id):
     print(nurse_id)
     res = process_get_nurse(nurse_id, request.get_json(silent=True, force=True), client)
+    r = make_response(res)
+    r.headers["Content-Type"] = "application/json"
+    return r
+
+@app.route('/nurses/<int:nurse_id>', methods=['PUT'])
+def update_nurse(nurse_id):
+    res = process_update_nurse(nurse_id, request.get_json(silent=True, force=True), client)
+    r = make_response(res)
+    r.headers["Content-Type"] = "application/json"
+    return r
+
+@app.route('/nurses/authenticate', methods=['POST'])
+def authenticate_nurse():
+    res = process_authenticate_nurse(request.get_json(silent=True, force=True), client)
     r = make_response(res)
     r.headers["Content-Type"] = "application/json"
     return r
