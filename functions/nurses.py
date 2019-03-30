@@ -79,7 +79,7 @@ def process_authenticate_nurse(req, client):
     res = {}
     nurse_id = req.get("nurse_id")
     password = req.get("password")
-    if(client.data.nurses.find_one({"_id": nurse_id})["password"] == password):
+    if(client.data.nurses.find_one({"_id": int(nurse_id)})["password"] == password):
         res["fullfilmentText"] = "True"
     else:
         res["fullfilmentText"] = "False"
