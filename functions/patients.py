@@ -37,6 +37,8 @@ def process_add_new_patient(req, client):
         res["ImageID"] = str(imageId)
     except:
         res["fullfilmentText"] = "False"
+    try:
+        updatedResult = client.data.nurses.update_one({"_id": req.get("nurse_id")}, {"$inc": {"nop": 1, "nos"+req.get("stage"): 1}})
     res["source"] = "webhook-hapd-api"
     res = json.dumps(res, indent = 4)
     print("Response:", res)
