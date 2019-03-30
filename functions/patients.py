@@ -22,7 +22,7 @@ def process_add_new_patient(req, client):
         "gender": req.get('gender'),
         "contact": req.get('contact'),
         "bloodgroup": req.get('bloodgroup'),
-        "nurse_id": int(req.get('nurseId')),
+        "nurse_id": int(req.get('nurse_id')),
         "address": req.get('address')
     }
     image_data = {
@@ -46,8 +46,9 @@ def process_get_patient(patient_id, req, client):
     res = {}
     try:
         patient = client.data.patients.find_one({'_id': int(patient_id)})
+        image = client.images.patients.find_one({'_id': int(patient_id)})
         res["fullfilmentText"] = "True"
-        res["data"] = return_without_password(patient)
+        res["data"] = {"data": return_without_password(patient), "image": image}
     except:
         res["fullfilmentText"] = "False"
     res["source"] = "webhook-hapd-api"
@@ -71,14 +72,31 @@ def process_get_patient_groupby_nurse_id(nurse_id, req, client):
 def process_update_patient(patient_id, req, client):
     print("Request:", req)
     res = {}
+    flag = 0
     try:
         query = {'_id': patient_id}
-        modified_data = req.get('data')
-        updatedResult = client.data.patients.update_one(query, {'$set': modified_data})
-        if(updatedResult.raw_result["updatedExisting"] == True):
-            res["fullfilmentText"] = "True"
-        else:
-            res["fullfilmentText"] = "False"
+        fields = ['name', 'dob', 'address', 'stage', 'bloodgroup', 'gender', 'password', 'image']
+        for field in fields:
+            if(field in req):
+                flag = 1
+        if(flag == 1):
+            if ('image' in req):
+                image = req['image']
+                del req['image']
+                updatedResult1 = client.images.patients.update_one(query, {'$set': {'image': image}})
+                if(updatedResult1.raw_result["updatedExisting"] == True):
+                    res["fullfilmentText"] = "True"
+                else:
+                    res["fullfilmentText"] = "False"
+                    res["source"] = "webhook-hapd-api"
+                    res = json.dumps(res, indent=4)
+                    return res
+            modified_data = req
+            updatedResult2 = client.data.patients.update_one(query, {'$set': modified_data})
+            if(updatedResult2.raw_result["updatedExisting"] == True):
+                res["fullfilmentText"] = "True"
+            else:
+                res["fullfilmentText"] = "False"
     except:
         print("Error in updating the document in the Database.")
         res["fullfilmentText"] = "False"
@@ -91,7 +109,8 @@ def process_delete_patient(patient_id, client):
     try:
         query = {'_id': patient_id}
         deletedResult = client.data.patients.delete_one(query)
-        if(deletedResult.deleted_count == 1):
+        deletedImageResult = client.images.patients.delete_one(query)
+        if(deletedResult.deleted_count == 1 and deletedImageResult.deleted_count == 1):
             res["fullfilmentText"] = "True"
         else:
             res["fullfilmentText"] = "False"
