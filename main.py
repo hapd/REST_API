@@ -54,7 +54,7 @@ def update_patient(patient_id):
     r.headers["Content-Type"] = "application/json"
     return r
 
-@app.route('/patients/delete/<int:patient_id>', methods=['DELETE'])
+@app.route('/patients/<int:patient_id>', methods=['DELETE'])
 def delete_patient(patient_id):
     res = process_delete_patient(patient_id, client)
     r = make_response(res)
