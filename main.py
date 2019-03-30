@@ -19,6 +19,7 @@ from functions.patients import process_authenticate_patient
 from functions.patients import process_update_patient
 from functions.patients import process_get_patient_groupby_nurse_id
 from functions.patients import process_delete_patient
+from functions.nurses import process_add_new_nurse
 
 
 client = pymongo.MongoClient("mongodb+srv://hapd:majorproject19@cluster0-vm7gp.mongodb.net/test?retryWrites=true")
@@ -69,7 +70,12 @@ def authenticate_patient():
     r.headers["Content-Type"] = "application/json"
     return r
 
-    
+@app.route('/nurses', methods=['POST'])
+def add_new_nurse():
+    res = process_add_new_nurse(request.get_json(silent=True, force=True), client)
+    r = make_response(res)
+    r.headers["Content-Type"] = "application/json"
+    return r
 
 
 if(__name__ == "__main__"):
