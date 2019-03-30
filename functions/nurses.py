@@ -4,6 +4,7 @@ import json
 
 def process_add_new_nurse(req, client):
     res = {}
+    print("Request:",req)
     currentId = client.data.nurses.count_documents({})
     newNurse = req
     newNurse['_id'] = int(currentId+1)
@@ -19,4 +20,6 @@ def process_add_new_nurse(req, client):
         res["fullfilmentText"] = "True"
     except:
         res["fullfilmentText"] = "False"
+    res["source"] = "hapd-api"
+    res = json.dumps(res, indent = 4)
     return res

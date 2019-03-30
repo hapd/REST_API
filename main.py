@@ -70,6 +70,8 @@ def authenticate_patient():
     r.headers["Content-Type"] = "application/json"
     return r
 
+
+# Routes for Nurses
 @app.route('/nurses', methods=['POST'])
 def add_new_nurse():
     res = process_add_new_nurse(request.get_json(silent=True, force=True), client)
