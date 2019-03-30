@@ -86,6 +86,21 @@ def process_update_patient(patient_id, req, client):
     res = json.dumps(res, indent=4)
     return res
 
+def process_delete_patient(patient_id, client):
+    res = {}
+    try:
+        query = {'_id': patient_id}
+        deletedResult = client.data.patients.delete_one(query)
+        if(deletedResult.deleted_count == 1):
+            res["fullfilmentText"] = "True"
+        else:
+            res["fullfilmentText"] = "False"
+    except:
+        res["fullfilmentText"] = "False"
+    res["source"] = "hapd-api"
+    res = json.dumps(res, indent=4)
+    return res
+
 def process_authenticate_patient(req, client):
     res = {}
     print('Request:', req)

@@ -18,6 +18,8 @@ from functions.patients import process_get_patient
 from functions.patients import process_authenticate_patient
 from functions.patients import process_update_patient
 from functions.patients import process_get_patient_groupby_nurse_id
+from functions.patients import process_delete_patient
+
 
 client = pymongo.MongoClient("mongodb+srv://hapd:majorproject19@cluster0-vm7gp.mongodb.net/test?retryWrites=true")
 
@@ -51,6 +53,14 @@ def update_patient(patient_id):
     r = make_response(res)
     r.headers["Content-Type"] = "application/json"
     return r
+
+@app.route('/patients/delete/<int:patient_id>', methods=['DELETE'])
+def delete_patient(patient_id):
+    res = process_delete_patient(patient_id, client)
+    r = make_response(res)
+    r.headers["Content-Type"] = "application/json"
+    return r
+
 
 @app.route('/patients/authenticate', methods=['POST'])
 def authenticate_patient():
