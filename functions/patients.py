@@ -25,16 +25,10 @@ def process_add_new_patient(req, client):
         "nurse_id": int(req.get('nurse_id')),
         "address": req.get('address')
     }
-    image_data = {
-        "_id": (currentId+1),
-        "image": req.get('image')
-    }
     try:
         dbId = client.data.patients.insert_one(newPatient).inserted_id
-        imageId = client.images.patients.insert_one(image_data).inserted_id
         res["fullfilmentText"] = "True"
         res["PID"] = str(dbId)
-        res["ImageID"] = str(imageId)
     except:
         res["fullfilmentText"] = "False"
     try:
