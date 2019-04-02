@@ -8,6 +8,7 @@ def return_without_password(a):
 
 def process_add_new_patient(req, client):
     res = {}
+    print("Request: ", req)
     year = str(req.get('dob')).split("/")[2]
     age = datetime.datetime.now().year - int(year)
     currentId = client.data.patients.count_documents({})
