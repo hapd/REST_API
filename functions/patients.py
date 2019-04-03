@@ -33,7 +33,7 @@ def process_add_new_patient(req, client):
     except:
         res["fullfilmentText"] = "False"
     try:
-        updatedResult = client.data.nurses.update_one({"_id": req.get("nurse_id")}, {"$inc": {"nop": 1, "nos"+req.get("stage"): 1}})
+        updatedResult = client.data.nurses.update_one({"_id": int(req.get("nurse_id"))}, {"$inc": {"nop": 1, "nos"+req.get("stage"): 1}})
         if(updatedResult.raw_result["updatedExisting"] == True):
             res["fullfilmentText"] = "True"
     except:
