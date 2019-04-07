@@ -90,9 +90,9 @@ def process_update_patient(patient_id, req, client):
         if(updatedResult.raw_result["updatedExisting"] == True):
             res["fullfilmentText"] = "True"
             if("stage" in unverifiedFields):
-                updatedResult2 = client.nurses.update_one({'_id': int(nurse_id)}, {"$inc": {"nos"+str(preStage): -1}})
+                updatedResult2 = client.data.nurses.update_one({'_id': int(nurse_id)}, {"$inc": {"nos"+str(preStage): -1}})
                 if(updatedResult2.raw_result["updatedExisting"] == True):
-                    updatedResult3 = client.nurses.update_one({'_id': int(nurse_id)}, {"$inc": {"nos"+str(req["stage"]): 1}})
+                    updatedResult3 = client.data.nurses.update_one({'_id': int(nurse_id)}, {"$inc": {"nos"+str(req["stage"]): 1}})
         else:
             res["fullfilmentText"] = "False"
     except:
