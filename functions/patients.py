@@ -59,7 +59,7 @@ def process_get_patient(patient_id, req, client):
 def process_get_patient_groupby_nurse_id(nurse_id, req, client):
     res = {}
     try:
-        patients_iter = client.data.patients.find({"nurse_id": nurse_id})
+        patients_iter = client.data.patients.finclient.data.patients.find({"nurse_id": nurse_id})d({"nurse_id": nurse_id})
         patients = [return_without_password(patient) for patient in patients_iter]
         res["fullfilmentText"] = "True"
         res["data"] = patients
@@ -77,12 +77,22 @@ def process_update_patient(patient_id, req, client):
         fields = ['name', 'dob', 'address', 'stage', 'bloodgroup', 'gender', 'password']
         unverifiedFields = req.keys()
         data = {}
+        preStage = ""
+        nurse_id = ""
         for field in unverifiedFields:
             if(field in fields):
+                if(field == "stage"):
+                    patient = client.data.patients.find_one({'_id': int(patient_id)})
+                    preStage = patient.get("stage")
+                    nurse_id = patient.get("nurse_id")
                 data[field] = req[field]
-        updatedResult2 = client.data.patients.update_one(query, {'$set': data})
-        if(updatedResult2.raw_result["updatedExisting"] == True):
+        updatedResult = client.data.patients.update_one(query, {'$set': data})
+        if(updatedResult.raw_result["updatedExisting"] == True):
             res["fullfilmentText"] = "True"
+            if("stage" in unverifiedFields):
+                updatedResult2 = client.nurses.update_one({'_id': nurse_id}, {"$inc": {"nos"+str(preStage): -1}})
+                if(updatedResult2.raw_result["updatedExisting"] == True):
+                    updatedResult3 = client.nurses.update_one({'_id': nurse_id}, {"$inc": {"nos"+str(data["stage"]): 1}})
         else:
             res["fullfilmentText"] = "False"
     except:
