@@ -59,7 +59,7 @@ def process_get_patient(patient_id, req, client):
 def process_get_patient_groupby_nurse_id(nurse_id, req, client):
     res = {}
     try:
-        patients_iter = client.data.patients.finclient.data.patients.find({"nurse_id": nurse_id})d({"nurse_id": nurse_id})
+        patients_iter = client.data.patients.finclient.data.patients.find({"nurse_id": nurse_id})
         patients = [return_without_password(patient) for patient in patients_iter]
         res["fullfilmentText"] = "True"
         res["data"] = patients
