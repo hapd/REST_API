@@ -121,7 +121,7 @@ def process_authenticate_patient(req, client):
     res = {}
     print('Request:', req)
     try:
-        patient_id = req.get('patient_id')
+        patient_id = int(req.get('patient_id'))
         password = req.get('password')
         if(password == client.data.patients.find_one({'_id': patient_id})["password"]):
             res["fullfilmentText"] = "Access granted"
