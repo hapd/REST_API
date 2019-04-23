@@ -23,6 +23,8 @@ from functions.nurses import process_add_new_nurse
 from functions.nurses import process_get_nurse
 from functions.nurses import process_update_nurse
 from functions.nurses import process_authenticate_nurse
+from functions.schedules import process_add_schedule
+
 
 client = pymongo.MongoClient("mongodb+srv://hapd:majorproject19@cluster0-vm7gp.mongodb.net/test?retryWrites=true")
 
@@ -104,7 +106,16 @@ def authenticate_nurse():
     r.headers["Content-Type"] = "application/json"
     return r
 
+# Route for Schedules
+@app.route('/schedules', methods=['POST'])
+def add_schedule():
+    res = process_add_schedule(request.get_json(silent=True, force=True), client)
+    r = make_response(res)
+    r.headers["Content-Type"]="application/json"
+    return r
+
 if(__name__ == "__main__"):
     port = int(os.getenv('PORT', 5000))
     print("Starting app on port %d" % port)
     app.run(debug=False, port=port, host='0.0.0.0')
+
