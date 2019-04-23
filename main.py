@@ -130,9 +130,9 @@ def update_schedule(patient_id):
     r.headers["Content-Type"] = "application/json"
     return r
 
-@app.route('/schedules/<int:patient_id>', methods=['DELETE'])
-def delete_schedule(patient_id):
-    res = process_delete_schedule(patient_id, client)
+@app.route('/schedules/<int:patient_id>/<string:time>', methods=['DELETE'])
+def delete_schedule(patient_id, time):
+    res = process_delete_schedule(patient_id, time, client)
     r = make_response(res)
     r.headers["Content-Type"] = "application/json"
     return r
