@@ -116,7 +116,7 @@ def add_schedule():
 
 @app.route('/schedules/<int:patient_id>', methods=['GET'])
 def get_schedule(patient_id):
-    res = process_get_schedule(patient_id, request.get_json(silent=True, force=True), client)
+    res = process_get_schedule(patient_id, client)
     r = make_response(res)
     r.headers["Content-Type"] = "application/json"
     return r
