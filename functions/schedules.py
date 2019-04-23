@@ -71,4 +71,18 @@ def process_update_schedule(patient_id, req, client):
     res["source"] = "hapd-api"
     res = json.dumps(res, indent = 4)
     return res
-            
+
+def process_delete_schedule(patient_id, client):
+    res = {}
+    query = {'_id': int(patient_id)}
+    try:
+        deletedResult = client.data.schedules.delete_one(query)
+        if(deletedResult.deleted_count == 1):
+            res["fullfilmentText"] = "True"
+        else:
+            res["fullfilmentText"] = "Could not be deleted"
+    except:
+        res["fullfilmentText"] = "Could not connect to the server"
+    res["source"] = "hapd-api"
+    res = json.dumps(res, indent=4)
+    return res
