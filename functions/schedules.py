@@ -34,7 +34,6 @@ def process_add_schedule(req,client):
             else:
                 res["fullfilmentText"] = "Could not update entry"    
         else:
-            res["tasks"] = tasks
             res["fullfilmentText"] = "Task already exists"
     res["source"] = "hapd-api"
     res = json.dumps(res, indent = 4)
@@ -56,5 +55,20 @@ def process_get_schedule(patient_id, client):
         res["fullfilmentText"] = "Could not connect to the server"
     res["source"] = "hapd-api"
     res = json.dumps(res, indent=4)
+    return res
+
+def process_update_schedule(patient_id, req, client):
+    res = {}
+    query = {'_id': int(patient_id)}
+    try:
+        updatedResult = client.data.schedules.update_one(query, {'$set': req})
+    except:
+        res["fullfilmentText"] = "Could not connect the server"
+    if(updatedResult.raw_result["updatedExisting"] == True):
+        res["fullfilmentText"] = "True"
+    else:
+        res["fullfilmentText"] = "Could not be updated"
+    res["source"] = "hapd-api"
+    res = json.dumps(res, indent = 4)
     return res
             
