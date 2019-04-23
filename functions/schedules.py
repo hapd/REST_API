@@ -72,7 +72,8 @@ def process_update_schedule(patient_id, req, client):
                 res["fullfilmentText"] = "True"
             else:
                 res["fullfilmentText"] = "Could not be updated"
-    except:
+    except Exception as e:
+        print(e)
         res["fullfilmentText"] = "Could not connect the server"
     res["source"] = "hapd-api"
     res = json.dumps(res, indent = 4)
