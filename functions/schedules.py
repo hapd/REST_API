@@ -39,3 +39,22 @@ def process_add_schedule(req,client):
     res["source"] = "hapd-api"
     res = json.dumps(res, indent = 4)
     return res
+
+def process_get_schedule(patient_id, client):
+    res = {}
+    query = {
+        '_id': int(patient_id)
+    }
+    try:
+        result = client.data.schedules.find_one(query)
+        if (result == None):
+            res["fullfilmentText"] = "No schedule with the given patient id"
+        else:
+            res["data"] = result
+            res["fullfilmentText"] = "True"
+    except:
+        res["fullfilmentText"] = "Could not connect to the server"
+    res["source"] = "hapd-api"
+    res = json.dumps(res, indent=4)
+    return res
+            
