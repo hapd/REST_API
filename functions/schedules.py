@@ -61,7 +61,7 @@ def process_update_schedule(patient_id, req, client):
     res = {}
     query = {'_id': int(patient_id)}
     time = req.get("time")
-    tasks = req.get("task")
+    task = req.get("task")
     old_time = req.get("old_time")
     old_task = req.get("old_task")
     try:
