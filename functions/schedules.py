@@ -60,13 +60,25 @@ def process_get_schedule(patient_id, client):
 def process_update_schedule(patient_id, req, client):
     res = {}
     query = {'_id': int(patient_id)}
+    time = req.get("time")
+    tasks = req.get("task")
+    old_time = req.get("old_time")
+    old_task = req.get("old_task")
     try:
         result = client.data.schedules.find_one(query)
         if (result == None):
             res["fullfilmentText"] = "Schedule does not exists"
         else:
             tasks = result["tasks"]
-            tasks[req.get("time")] = req.get("task")
+            if(old_time != time):
+                del tasks[old_time]
+                tasks[time] = task
+            elif(old_task != task):
+                k = list(tasks.keys())
+                for i in k:
+                    if(tasks[i] == old_task):
+                        del tasks[i]
+                        tasks[time] = task
             updatedResult = client.data.schedules.update_one(query, {"$set":{"tasks": tasks}})
             if(updatedResult.raw_result["updatedExisting"] == True):
                 res["fullfilmentText"] = "True"
