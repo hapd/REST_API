@@ -61,26 +61,38 @@ def process_update_schedule(patient_id, req, client):
     res = {}
     query = {'_id': int(patient_id)}
     try:
-        updatedResult = client.data.schedules.update_one(query, {'$set': req})
+        result = client.data.schedules.fine_one(query)
+        if (result == None):
+            res["fullfilmentText"] = "Schedule does not exists"
+        else:
+            tasks = result["tasks"]
+            tasks[req.get("time")] = req.get("task")
+            updatedResult = client.data.schedules.update_one(query, {"$set":{"tasks": tasks}})
+            if(updatedResult.raw_result["updatedExisting"] == True):
+                res["fullfilmentText"] = "True"
+            else:
+                res["fullfilmentText"] = "Could not be updated"
     except:
         res["fullfilmentText"] = "Could not connect the server"
-    if(updatedResult.raw_result["updatedExisting"] == True):
-        res["fullfilmentText"] = "True"
-    else:
-        res["fullfilmentText"] = "Could not be updated"
     res["source"] = "hapd-api"
     res = json.dumps(res, indent = 4)
     return res
 
-def process_delete_schedule(patient_id, client):
+def process_delete_schedule(patient_id, time, client):
     res = {}
     query = {'_id': int(patient_id)}
     try:
-        deletedResult = client.data.schedules.delete_one(query)
-        if(deletedResult.deleted_count == 1):
-            res["fullfilmentText"] = "True"
+        result = client.data.schedules.fine_one(query)
+        if (result == None):
+            res["fullfilmentText"] = "Schedule does not exists"
         else:
-            res["fullfilmentText"] = "Could not be deleted"
+            tasks = result["tasks"]
+            del tasks[time]
+            updatedResult = client.data.schedules.update_one(query, {"$set":{"tasks": tasks}})
+            if(updatedResult.raw_result["updatedExisting"] == True):
+                res["fullfilmentText"] = "True"
+            else:
+                res["fullfilmentText"] = "Could not be updated"
     except:
         res["fullfilmentText"] = "Could not connect to the server"
     res["source"] = "hapd-api"
