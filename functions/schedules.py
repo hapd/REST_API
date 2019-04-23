@@ -61,7 +61,7 @@ def process_update_schedule(patient_id, req, client):
     res = {}
     query = {'_id': int(patient_id)}
     try:
-        result = client.data.schedules.fine_one(query)
+        result = client.data.schedules.find_one(query)
         if (result == None):
             res["fullfilmentText"] = "Schedule does not exists"
         else:
@@ -83,7 +83,7 @@ def process_delete_schedule(patient_id, time, client):
     res = {}
     query = {'_id': int(patient_id)}
     try:
-        result = client.data.schedules.fine_one(query)
+        result = client.data.schedules.find_one(query)
         if (result == None):
             res["fullfilmentText"] = "Schedule does not exists"
         else:
