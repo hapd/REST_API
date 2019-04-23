@@ -26,6 +26,7 @@ from functions.nurses import process_authenticate_nurse
 from functions.schedules import process_add_schedule
 from functions.schedules import process_get_schedule
 from functions.schedules import process_update_schedule
+from functions.schedules import process_delete_schedule
 
 client = pymongo.MongoClient("mongodb+srv://hapd:majorproject19@cluster0-vm7gp.mongodb.net/test?retryWrites=true")
 
@@ -125,6 +126,13 @@ def get_schedule(patient_id):
 @app.route('/schedules/<int:patient_id>', methods=['PUT'])
 def update_schedule(patient_id):
     res = process_update_schedule(patient_id, request.get_json(silent=True, force=True), client)
+    r = make_response(res)
+    r.headers["Content-Type"] = "application/json"
+    return r
+
+@app.route('/schedules/<int:patient_id>', methods=['DELETE'])
+def delete_schedule(patient_id):
+    res = process_delete_schedule(patient_id, client)
     r = make_response(res)
     r.headers["Content-Type"] = "application/json"
     return r
