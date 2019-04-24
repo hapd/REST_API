@@ -156,9 +156,9 @@ def get_notification(nurse_id):
     r.headers["Content-Type"] = "application/json"
     return r
 
-@app.route('/notification/<int:nurse_id>/<int:patient_id>/<string:notification>', methods=['DELETE'])
-def delete_notification(nurse_id, patient_id, notification):
-    res = process_delete_notification(nurse_id, patient_id, notification, client)
+@app.route('/notification/<int:nurse_id>/<string:notification>', methods=['DELETE'])
+def delete_notification(nurse_id, notification):
+    res = process_delete_notification(nurse_id, notification, client)
     r = make_repsonse(res)
     r.headers["Content-type"] = "application/json"
     return r
