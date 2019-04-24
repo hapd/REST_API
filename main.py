@@ -27,6 +27,11 @@ from functions.schedules import process_add_schedule
 from functions.schedules import process_get_schedule
 from functions.schedules import process_update_schedule
 from functions.schedules import process_delete_schedule
+from functions.notifications import process_add_notification
+from functions.notifications import process_get_notification
+from functions.notifications import process_pop_notification
+from functions.notifications import process_delete_notification
+
 
 client = pymongo.MongoClient("mongodb+srv://hapd:majorproject19@cluster0-vm7gp.mongodb.net/test?retryWrites=true")
 
@@ -135,6 +140,35 @@ def delete_schedule(patient_id, time):
     res = process_delete_schedule(patient_id, time, client)
     r = make_response(res)
     r.headers["Content-Type"] = "application/json"
+    return r
+
+# Route for Notifications
+@app.route('/notification/<int:nurse_id>', methods=['PUT'])
+def add_notification(nurse_id):
+    res = process_add_notification(nurse_id, request.get_json(silent=True, force=True), client)
+    r = make_response(res)
+    r.headers["Content-Type"] = "application/json"
+    return r
+
+@app.route('/notification/<int:nurse_id>', methods=['GET'])
+def get_notification(nurse_id):
+    res = process_get_notification(nurse_id, client)
+    r = make_response(res)
+    r.headers["Content-Type"] = "application/json"
+    return r
+
+@app.route('/notification/<int:nurse_id>/pop', methods=['DELETE'])
+def pop_notification(nurse_id):
+    res = process_pop_notification(nurse_id, client)
+    r = make_repsonse(res)
+    r.headers["Content-type"] = "application/json"
+    return r
+
+@app.route('/notification/<int:nurse_id>', methods=['DELETE'])
+def delete_notification(nurse_id):
+    res = process_delete_notification(nurse_id, client)
+    r = make_repsonse(res)
+    r.headers["Content-type"] = "application/json"
     return r
 
 if(__name__ == "__main__"):
