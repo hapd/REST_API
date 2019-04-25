@@ -22,7 +22,7 @@ def process_add_acquaintance(patient_id, name, relation, client):
     faces = result["faces"]
     names = list(faces.keys())
     if(name not in names):
-      faces["name"] = {
+      faces[name] = {
         'relation': str(relation),
         'number-of-images': 0
       }
