@@ -164,7 +164,7 @@ def delete_notification(nurse_id):
     return r
 
 # Routes for Faces
-@app.route('/faces/<int:patient_id>/<string:name>', methods=['PUT'])
+@app.route('/faces/<int:patient_id>/<string:name>', methods=['GET'])
 def add_faces(patient_id, name):
     res = process_add_face(patient_id, name, client)
     r = make_response(res)
