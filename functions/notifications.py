@@ -12,7 +12,7 @@ def process_add_notification(nurse_id, req, client):
         except Exception as e:
             res["fullfilmentText"] = str(e)
     else:
-        notifications = result["notification"]
+        notifications = result["notifications"]
         notifications.append(notification)
         try:
             updatedResult = client.data.notifications.update_one({'_id': int(nurse_id)}, {'$set': {"notifications": notifications}})
