@@ -46,3 +46,15 @@ def process_add_face(patient_id, name, client):
   res["source"] = "hapd-api"
   res = json.dumps(res, indent=4)
   return res
+
+def process_get_faces(patient_id, client):
+  res = {}
+  result = client.data.faces.find_one({'_id': int(patient_id)})
+  if(result == None):
+    res["fullfilmentText"] = "False"
+  else:
+    res["fullfilmentText"] = "True"
+    res["data"] = result
+  res["source"] = "hapd-api"
+  res = json.dumps(res, indent=4)
+  return res
