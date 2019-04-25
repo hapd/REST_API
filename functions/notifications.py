@@ -42,9 +42,10 @@ def process_get_notification(nurse_id, client):
     res = json.dumps(res, indent=4)
     return res
 
-def process_delete_notification(nurse_id, notification, client):
+def process_delete_notification(nurse_id, req, client):
     res = {}
     query = {'_id': int(nurse_id)}
+    notification = req.get("notification")
     try:
         result = client.data.notifications.find_one(query)
         if(result == None):
