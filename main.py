@@ -30,7 +30,7 @@ from functions.schedules import process_delete_schedule
 from functions.notifications import process_add_notification
 from functions.notifications import process_get_notification
 from functions.notifications import process_delete_notification
-
+from functions.faces import process_add_face
 
 client = pymongo.MongoClient("mongodb+srv://hapd:majorproject19@cluster0-vm7gp.mongodb.net/test?retryWrites=true")
 
@@ -141,7 +141,7 @@ def delete_schedule(patient_id, time):
     r.headers["Content-Type"] = "application/json"
     return r
 
-# Route for Notifications
+# Routes for Notifications
 @app.route('/notification/<int:nurse_id>', methods=['PUT'])
 def add_notification(nurse_id):
     res = process_add_notification(nurse_id, request.get_json(silent=True, force=True), client)
@@ -162,6 +162,15 @@ def delete_notification(nurse_id):
     r = make_response(res)
     r.headers["Content-type"] = "application/json"
     return r
+
+# Routes for Faces
+@app.route('/faces/<int:patient_id>/<string:name>', methods=['PUT'])
+def add_faces(patient_id, name):
+    res = process_add_face(patient_id, name, client)
+    r = make_response(res)
+    r.headers["Content-type"] = "application/json"
+    return r
+
 
 if(__name__ == "__main__"):
     port = int(os.getenv('PORT', 5000))
