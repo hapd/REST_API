@@ -10,6 +10,11 @@ def process_add_face(patient_id, name, client):
         str(name): 1
       }
     }
+    try:
+      inserted_id = client.data.faces.insert_one(data).inserted_id
+      res["fullfilmentText"] = "True"
+    except Exception as e:
+      res["fullfilmentText"] = str(e)
   else:
     faces = result['faces']
     names = list(faces.keys())
