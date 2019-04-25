@@ -158,7 +158,7 @@ def get_notification(nurse_id):
 
 @app.route('/notification/<int:nurse_id>', methods=['DELETE'])
 def delete_notification(nurse_id):
-    res = process_delete_notification(nurse_id, client)
+    res = process_delete_notification(nurse_id, request.get_json(silent=True, force=True),client)
     r = make_repsonse(res)
     r.headers["Content-type"] = "application/json"
     return r
