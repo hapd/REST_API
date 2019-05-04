@@ -9,7 +9,8 @@ def process_add_acquaintance(patient_id, name, relation, client):
       'faces': {
         str(name): {
           'relation': str(relation),
-          'number-of-images': 0
+          'number-of-images': 0,
+          'index': 1
         }
       }
     }
@@ -21,10 +22,12 @@ def process_add_acquaintance(patient_id, name, relation, client):
   else:
     faces = result["faces"]
     names = list(faces.keys())
+    currentIndex = len(names)
     if(name not in names):
       faces[name] = {
         'relation': str(relation),
-        'number-of-images': 0
+        'number-of-images': 0,
+        'index': int(currentIndex+1)
       }
       try:
         updatedResult = client.data.faces.update_one({"_id": int(patient_id)}, {"$set": {"faces": faces}})
