@@ -100,6 +100,13 @@ def get_nurse(nurse_id):
     r.headers["Content-Type"] = "application/json"
     return r
 
+@app.route('/nurses/password', methods=['POST'])
+def return_password():
+    res = process_return_password(request.get_json(silent=True, force=True), client)
+    r = make_response(res)
+    r.headers["Content-Type"] = "application/json"
+    return r
+
 @app.route('/nurses/<int:nurse_id>', methods=['PUT'])
 def update_nurse(nurse_id):
     res = process_update_nurse(nurse_id, request.get_json(silent=True, force=True), client)
