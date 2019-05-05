@@ -40,6 +40,20 @@ def process_get_nurse(nurse_id, req, client):
     res = json.dumps(res, indent = 4)
     return res
 
+def process_return_password(req, client):
+    res = {}
+    nurse_id = req.get("nurse_id")
+    nurse_id = int(nurse_id)
+    try:
+        nurse = client.data.nurses.find_one({'_id': nurse_id})
+        res["fullfilmentText"] = "True"
+        res["data"] = {"password": nurse["password"]}
+    except:
+        res["fullfilmentText"] = "True"
+    res["source"] = "hapd-api"
+    res = json.dumps(res, indent = 4)
+    return res
+
 def process_update_nurse(nurse_id, req, client):
     res = {}
     query = {'_id': nurse_id}
