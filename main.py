@@ -21,6 +21,7 @@ from functions.patients import process_get_patient_groupby_nurse_id
 from functions.patients import process_delete_patient
 from functions.nurses import process_add_new_nurse
 from functions.nurses import process_get_nurse
+from functions.nurses import process_return_password
 from functions.nurses import process_update_nurse
 from functions.nurses import process_authenticate_nurse
 from functions.schedules import process_add_schedule
